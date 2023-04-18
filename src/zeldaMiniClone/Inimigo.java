@@ -9,7 +9,7 @@ public class Inimigo extends Rectangle{//Pois o retângulo de todas as boxs de c
 	private static final long serialVersionUID = 1L;
 	
 	public int right = 1, up = 0, down = 0, left = 0;
-	public int spd = 4;
+	public int spd = 2;
 	public int curAnimation = 0;
 	public int curFrames = 0, targetFrame = 10;
 	public static List<Bullet> bullets = new ArrayList<>();
@@ -19,13 +19,27 @@ public class Inimigo extends Rectangle{//Pois o retângulo de todas as boxs de c
 	public Inimigo(int x, int y) {
 		super(x,y,32,32);//Medidas do retângulo(player)
 	}
+	
+	public void perseguirPlayer() {
+		Player p = Game.player;
+		
+		if(x < p.x && World.isFree(x+spd, y)) {
+			x += spd;
+		} else if(x > p.x && World.isFree(x-spd, y)) {
+			x-=spd;
+		}
+		
+		if(y < p.y && World.isFree(x, y+spd)) {
+			y+= spd;
+		} else if(y > p.y && World.isFree(x, y-spd)) {
+			y-=spd;
+		}
+	}
 
 	public void tick() {//Lógica do player
 		boolean moved = true;
 
-		if(right == 1 && World.isFree(x + 1, y)) {
-			x++;
-		}
+		perseguirPlayer();
 		
 		if(moved) {
 			curFrames++;
